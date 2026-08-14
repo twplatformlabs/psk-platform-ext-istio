@@ -1,0 +1,11 @@
+ambient:
+  enabled: false
+
+useAppArmorAnnotation: false
+
+# Revision is set as 'version' label and part of the resource names when installing multiple control planes.
+revision: "1-28-9"
+
+global:
+  imagePullPolicy: "Always"
+  logAsJson: true

@@ -1,0 +1,55 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-system
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-ingress
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: default-mtls    # test namespace for the current "release" revision
+  labels:
+    istio.io/rev: release
+    pod-security.kubernetes.io/enforce: baseline
+
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: default-mtls-ns-quota
+  namespace: default-mtls
+spec:
+  hard:
+    requests.cpu: "2"
+    requests.memory: 2Gi
+    limits.cpu: "10"
+    limits.memory: 20Gi
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: default-mtls-canary   # test namespace for the pending "canary" revision
+  labels:
+    istio.io/rev: canary
+    pod-security.kubernetes.io/enforce: baseline
+
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: default-mtls-canary-ns-quota
+  namespace: default-mtls-canary
+spec:
+  hard:
+    requests.cpu: "2"
+    requests.memory: 2Gi
+    limits.cpu: "10"
+    limits.memory: 20Gi

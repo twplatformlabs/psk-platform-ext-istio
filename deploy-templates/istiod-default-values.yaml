@@ -1,0 +1,37 @@
+seccompProfile:
+  type: RuntimeDefault
+
+nodeSelector:
+  nodegroup: management-arm-rkt-mng
+
+tolerations:
+  - key: "dedicated"
+    operator: "Equal"
+    value: "management"
+    effect: "NoSchedule"
+
+revision: "1-28-9"
+
+global:
+  defaultPodDisruptionBudget:
+    enabled: true
+    maxUnavailable: 1
+  imagePullPolicy: "Always"
+  logAsJson: true
+
+  waypoint:
+    nodeSelector:
+      nodegroup: management-arm-rkt-mng
+
+    tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "management"
+        effect: "NoSchedule"
+
+pilot:
+  cni:
+    enabled: true
+
+pdb:
+  maxUnavailable: 1
