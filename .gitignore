@@ -1,0 +1,10 @@
+kubeconfig*
+deploy-templates/application.yaml
+deploy-files/
+test/*.yaml
+notes.*
+source.env
+temp.yaml
+del-resource.sh
+bash-functions.sh
+review*
