@@ -95,7 +95,7 @@ workflows:
           cluster: sbx-i01-aws-us-east-1
           cluster-role: sandbox
           requires:
-            - update sandbox configuration
+            - update sandbox istio configuration
           filters: *on-push-main
   
   deploy production role configuration:
@@ -112,7 +112,7 @@ workflows:
           cluster: prod-i01-aws-us-east-2
           cluster-role: production
           requires:
-            - update production configuration
+            - update production istio configuration
           filters: *on-tag-main
 
   #     - do/gh-release:
