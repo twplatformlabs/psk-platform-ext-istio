@@ -63,6 +63,6 @@ EOF
 cat deploy-files/istio-dependencies/application.yaml
 
 # echo "copying istio-dependency values"
-cp -v deploy-templates/deps-default-values.yaml deploy-files/istios-dependencies/deps-default-values.yaml
-cp -v deploy-templates/deps-$cluster_role-values.yaml deploy-files/istios-dependencies/deps-$cluster_role-values.yaml
+cp -v deploy-templates/deps-default-values.yaml deploy-files/istio-dependencies/deps-default-values.yaml
+cp -v deploy-templates/deps-$cluster_role-values.yaml deploy-files/istio-dependencies/deps-$cluster_role-values.yaml
 
