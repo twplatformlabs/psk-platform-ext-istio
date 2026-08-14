@@ -1,0 +1,7 @@
+{
+  "custom_chart_version": "HEAD",
+  "istio_release_version": "1.29.3",
+  "istio_canary_version": "1.29.3",
+  "argocd_namespace": "psk-system",
+  "aws_region": "us-east-1"
+}
