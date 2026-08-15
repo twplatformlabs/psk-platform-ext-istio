@@ -35,7 +35,7 @@ spec:
 
   sources:
     - repoURL: https://github.com/twplatformlabs/psk-platform-ext-istio
-      path: chart/istio-dependencies
+      path: charts/istio-dependencies
       targetRevision: $custom_chart_version
       helm:
         valueFiles:
