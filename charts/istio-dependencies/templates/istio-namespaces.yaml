@@ -17,6 +17,7 @@ metadata:
   name: default-mtls    # test namespace for the current "release" revision
   labels:
     istio.io/rev: release
+    platform-vault: "true"
     pod-security.kubernetes.io/enforce: baseline
 
 ---
@@ -39,6 +40,7 @@ metadata:
   name: default-mtls-canary   # test namespace for the pending "canary" revision
   labels:
     istio.io/rev: canary
+    platform-vault: "true"
     pod-security.kubernetes.io/enforce: baseline
 
 ---
