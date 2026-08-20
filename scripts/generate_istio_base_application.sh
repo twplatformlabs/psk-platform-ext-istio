@@ -174,7 +174,7 @@ EOF
 cat deploy-files/istio-revision-default/application.yaml
 
 echo "copying istio base env values files"
-cp -v deploy-templates/istio-base-default-values deploy-files/istio-base/istio-base-default-values.yaml
-cp -v deploy-templates/istio-base-$cluster_role-values deploy-files/istio-base/istio-base-$cluster_role-values.yaml
-cp -v deploy-templates/istio-cni-default-values deploy-files/istio-cni/istio-cni-default-values.yaml
-cp -v deploy-templates/istio-cni-$cluster_role-values deploy-files/istio-cni/istio-cni-$cluster_role-values.yaml
+cp -v deploy-templates/istio-base-default-values.yaml deploy-files/istio-base/istio-base-default-values.yaml
+cp -v deploy-templates/istio-base-$cluster_role-values.yaml deploy-files/istio-base/istio-base-$cluster_role-values.yaml
+cp -v deploy-templates/istio-cni-default-values.yaml deploy-files/istio-cni/istio-cni-default-values.yaml
+cp -v deploy-templates/istio-cni-$cluster_role-values.yaml deploy-files/istio-cni/istio-cni-$cluster_role-values.yaml
