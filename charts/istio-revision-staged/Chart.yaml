@@ -1,0 +1,7 @@
+apiVersion: v2
+name: istio-dependencies
+description: |-
+  Setup release Revision to istio release version
+type: application
+version: 0.1.0
+

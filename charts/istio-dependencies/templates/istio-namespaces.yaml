@@ -37,9 +37,9 @@ spec:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: default-mtls-canary   # test namespace for the pending "canary" revision
+  name: default-mtls-staged   # test namespace for the pending "staged" revision
   labels:
-    istio.io/rev: canary
+    istio.io/rev: staged
     platform-vault: "true"
     pod-security.kubernetes.io/enforce: baseline
 
@@ -47,8 +47,8 @@ metadata:
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-  name: default-mtls-canary-ns-quota
-  namespace: default-mtls-canary
+  name: default-mtls-staged-ns-quota
+  namespace: default-mtls-staged
 spec:
   hard:
     requests.cpu: "2"
