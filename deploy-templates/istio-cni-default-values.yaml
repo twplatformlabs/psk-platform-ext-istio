@@ -21,7 +21,7 @@ excludeNamespaces:
   - observe
 
 seccompProfile:
-  - RuntimeDefault
+  type: RuntimeDefault
 
 resourceQuotas:
   enabled: false
