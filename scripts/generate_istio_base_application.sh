@@ -83,7 +83,7 @@ spec:
         factor: 2
         maxDuration: 5m
 EOF
-# cat deploy-files/crossplane/application.yaml
+cat deploy-files/istio-base/application.yaml
 
 echo "generating cni application.yaml"
 cat <<EOF > deploy-files/istio-cni/application.yaml
@@ -127,7 +127,7 @@ spec:
         factor: 2
         maxDuration: 5m
 EOF
-# cat deploy-files/crossplane/application.yaml
+cat deploy-files/istio-cni/application.yaml
 
 echo "generating revision setting for default Tag, equal to the base version.yaml"
 cat <<EOF > deploy-files/istio-revision-default/application.yaml
@@ -171,12 +171,10 @@ spec:
         factor: 2
         maxDuration: 5m
 EOF
-# cat deploy-files/crossplane/application.yaml
-#helm template istiod istio/istiod -s templates/revision-tags-mwc.yaml --version 1.29.3 --set revisionTags="{default}" --set revision=$base_revision -n istio-system 
-        
+cat deploy-files/istio-revision-default/application.yaml
 
-# echo "copying crossplane and custom aws values"
-# cp -v deploy-templates/default-values.yaml deploy-files/crossplane/default-values.yaml
-# cp -v deploy-templates/$cluster_role-values.yaml deploy-files/crossplane/$cluster_role-values.yaml
-# cp -v deploy-templates/aws-default-values.yaml deploy-files/crossplane-aws/aws-default-values.yaml
-# cp -v deploy-templates/aws-default-values.yaml deploy-files/crossplane-aws/aws-$cluster_role-values.yaml
+echo "copying istio base env values files"
+cp -v deploy-templates/istio-base-default-values deploy-files/istio-base/istio-base-default-values.yaml
+cp -v deploy-templates/istio-base-$cluster_role-values deploy-files/istio-base/istio-base-$cluster_role-values.yaml
+cp -v deploy-templates/istio-cni-default-values deploy-files/istio-cni/istio-cni-default-values.yaml
+cp -v deploy-templates/istio-cni-$cluster_role-values deploy-files/istio-cni/istio-cni-$cluster_role-values.yaml
