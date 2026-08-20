@@ -13,15 +13,15 @@
   [[ ! "${output}" =~ "istio.io/rev: release" ]]
 }
 
-@test "default-mtls-canary namespace exists" {
+@test "default-mtls-staged namespace exists" {
   run bash -c "kubectl get ns"
-  [[ "${output}" =~ "default-mtls-canary" ]]
+  [[ "${output}" =~ "default-mtls-staged" ]]
 }
 
-@test "default-mtls-canary namespace has correct labels" {
-  run bash -c "kubectl get ns default-mtls-canary --show-labels"
+@test "default-mtls-staged namespace has correct labels" {
+  run bash -c "kubectl get ns default-mtls-staged --show-labels"
   [[ ! "${output}" =~ "platform-vault=true" ]]
   [[ ! "${output}" =~ "managed-by=psk-platform-ext-istio" ]]
-  [[ ! "${output}" =~ "istio.io/rev: canary" ]]
+  [[ ! "${output}" =~ "istio.io/rev: staged" ]]
 }
 
