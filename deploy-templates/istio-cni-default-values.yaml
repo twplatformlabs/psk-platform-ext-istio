@@ -1,11 +1,46 @@
-ambient:
-  enabled: false
-
-useAppArmorAnnotation: false
-
-# Revision is set as 'version' label and part of the resource names when installing multiple control planes.
-revision: "1-28-9"
-
 global:
   imagePullPolicy: "Always"
-  logAsJson: true
+
+  logging:
+    level: info
+
+  logAsJson: false
+  networkPolicy:
+    enabled: false
+
+  defaultResources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+
+  resourceScope: all
+
+excludeNamespaces:
+  - kube-system
+  - psk-system
+  - observe
+
+seccompProfile:
+  - RuntimeDefault
+
+resourceQuotas:
+  enabled: false
+  pods: 5000
+
+tolerations:
+  # Make sure istio-cni-node gets scheduled on all nodes.
+  - effect: NoSchedule
+    operator: Exists
+  # Mark the pod as a critical add-on for rescheduling.
+  - key: CriticalAddonsOnly
+    operator: Exists
+  - effect: NoExecute
+    operator: Exists
+
+# K8s DaemonSet update strategy.
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+
+terminationGracePeriodSeconds: 30
