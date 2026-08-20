@@ -19,7 +19,7 @@
 }
 
 @test "default-mtls-canary namespace has correct labels" {
-  run bash -c "kkubectl get ns default-mtls-canary --show-labels"
+  run bash -c "kubectl get ns default-mtls-canary --show-labels"
   [[ ! "${output}" =~ "platform-vault=true" ]]
   [[ ! "${output}" =~ "managed-by=psk-platform-ext-istio" ]]
   [[ ! "${output}" =~ "istio.io/rev: canary" ]]
