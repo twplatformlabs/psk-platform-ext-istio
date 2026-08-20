@@ -8,6 +8,7 @@ base_revision=$(echo "${istio_base_version}" | tr '.' '-')
 echo "base_revision $base_revision"
 argocd_namespace=$(jq -er .argocd_namespace environments/$cluster_role.json)
 
+mkdir -p deploy-files
 mkdir -p deploy-files/istio-dependencies
 mkdir -p deploy-files/istio-base
 mkdir -p deploy-files/istio-cni
@@ -134,7 +135,7 @@ cat <<EOF > deploy-files/istio-revision-default/application.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istio-default-revision
+  name: istio-revision-default
   namespace: $argocd_namespace
   finalizers:
     - resources-finalizer.argocd.argoproj.io

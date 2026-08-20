@@ -46,6 +46,12 @@ role_search_url="$configuration_repo_url/$cluster_role"
 installed_base=$(get_app_target_revision sandbox istio-base)
 installed_release=$(get_app_target_revision sandbox istio-release)
 installed_staged=$(get_app_target_revision sandbox istio-staged)
+
+# Used when debugging script logic testing
+# installed_base=1.29.3
+# installed_staged=1.29.3
+# installed_release=1.29.0
+
 echo "Currently deployed versions:"
 echo "base: $installed_base"
 echo "release: $installed_release"
@@ -58,10 +64,12 @@ if [[ ("$istio_base_version" != "$istio_release_version") && ("$istio_base_versi
 fi
 
 if [[ ("$istio_base_version" == "$istio_release_version") && ("$istio_base_version" != "$istio_staged_version") ]]; then
+    echo "base = release && base != staged"
     if [[ "$installed_release" == "$istio_release_version" ]]; then
+        echo "installed release = release"
         echo "FAIL: istio_base_version and istio_release_version are not equal to istio_staged_version,"
-        echo "but the currently deployed release version does not match istio_base_version. This"
-        echo "istio_staged_version indicates a ROLLBACK is desired. Rollbacks are performed by"
+        echo "and the currently deployed release version does match istio_base_version. This"
+        echo "indicates a ROLLBACK is desired. Rollbacks are performed by"
         echo "setting istio_base_version = istio_release_version = istio_staged_version where"
         echo "istio_base_version and istio_staged_version were previously deployed as new versions"
         exit 1
@@ -74,15 +82,18 @@ if [[ ("$istio_base_version" == "$istio_release_version") && ("$istio_base_versi
 fi
 
 if [[ ("$istio_base_version" == "$istio_release_version") && ("$istio_base_version" == "$istio_staged_version") ]]; then
-    if [[ ("$installed_release" == "$istio_release_version") && ("$installed_release" != "$installed_base") && ("$installed_release" != "$installed_staged") ]]
+      echo "base = release = stage"
+    if [[ ("$installed_release" == "$istio_release_version") && ("$installed_release" != "$installed_base") && ("$installed_release" != "$installed_staged") ]]; then
+        echo "installed release = release && installed release ≠ installed base && installed release ≠ installed stage"
         echo "Begin completion of rollback to version $istio_release_version"
-    elif [[ ("$installed_release" != "$istio_release_version") && ("$installed_base" == "$istio_base_version") && ("$installed_staged" == "$istio_staged_version")]]
+    elif [[ ("$installed_release" != "$istio_release_version") && ("$installed_base" == "$istio_base_version") && ("$installed_staged" == "$istio_staged_version")]]; then
+        echo "installed release ≠ release, installed base = base, installed staged = staged"
         echo "Begin completion of upgrade of release version $installed_release to $istio_release_version"
     else
         echo "FAIL: unexpected version combination. Likely indicates an attempt to install and"
         echo "release a version of istio at the same time. All versions must be staged and"
         echo "tested before being set as release"
-        echo 1
+        exit 1
     fi
 fi
 
@@ -91,14 +102,14 @@ if [[ ("$istio_base_version" != "$istio_release_version") && ("$istio_base_versi
 fi
 
 # generate_istio_base
-bash scripts/generate_istio_base_application.sh $cluster_role # perform both base and CNI as they are always the same version
-Set default revision to base version.
+# bash scripts/generate_istio_base_application.sh $cluster_role # perform both base and CNI as they are always the same version
+# Set default revision to base version.
 
-# generate_istiod and _ingressgateway --staged revision
-bash scripts/generate_istio_application.sh $cluster_role staged   # perform both istiod and ingressgatewat as they are same version
+# # generate_istiod and _ingressgateway --staged revision
+# bash scripts/generate_istio_application.sh $cluster_role staged   # perform both istiod and ingressgatewat as they are same version
 
-# generate_istiod and _ingressgateway --release revision
-bash scripts/generate_istio_application.sh $cluster_role release  # perform both istiod and ingressgatewat as they are same version
+# # generate_istiod and _ingressgateway --release revision
+# bash scripts/generate_istio_application.sh $cluster_role release  # perform both istiod and ingressgatewat as they are same version
 
 
 # set_revisionTag staged on --revision=STAGED_VERSION_STRING
