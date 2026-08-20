@@ -72,11 +72,13 @@ There are four components within the primary istio deployment:
 
 The **Base* amd **CNI** deployments do not have a `Revision` setting. These are more traditional deployments where there is only a single version deployed at a time. They are also guaranteed to always be backwards compatible for several versions.  
 
-**istiod** and **gateways** are deployed as Revisions, and Tags defined will control which version a namespace is using.  
+**gateways** will be treated similar to Base and CNI by this pipelines. They do support their own revision release process. But there are additional steps involved when using this approach as the external LB will be now directing traffic to both Envoy ingressgateway  proxies and you have to use specific routing rules to creating the testing scenary for which this is intended. Therefore it is quite common for this to be treated like Base of CNI where you do in-place upgrade and then rollback where issues are found (hence the importance of non-production testing environments). This is the approach used here.  
 
-In our environment state, we track the _base_ value (used for _base_ and _cni_) separately. The deployment will simply install which ever version we set for these applications.  
+**istiod** is deployed as a Revision, and Tags defined will control which version a namespace is using.  
 
-The basic flow is that, with each new version of istio adopted, _base_ and _staged_ are first set to this new version andn then integration testing is performed within the default-mtls-staged namespace. Once we are satisfied with the health of the new version, then _release_ is also set to the new version and the upgrade is complete - apart from the required rolling restart.  
+In our environment state, we track the _base_ value (used for _base_, _cni_, and _ingressgateway_) separately. The deployment will simply install which ever version we set for these applications.  
+
+The basic flow is that, with each new version of istio adopted, _base_ and _staged_ are first set to this new version and then integration testing is performed within the default-mtls-staged namespace. Once we are satisfied with the health of the new version, then _release_ is also set to the new version and the upgrade is complete - apart from the required rolling restart.  
 
 Should there be problems with the staged release, the deployment can remain in this "staged" condition while we work out the issues. The _base_ installation is reasonably assured to not be the source of the issue. Typically, once the problem is understood, either there is a configuration adjustment to the staged version or (more often) deprecated configurations of application using Istio are correct and then the upgrade can continue. Should we want to "rollback" and remain at the prior version for an extended time, set _base_ and _staged_ back to the _release_ version to effect a rollback of the _base_ and _cni_ applications.   
 
@@ -90,9 +92,9 @@ Keeping this flow expectation in mind, we will use the _base_ version to guide t
 | base |    ≠    |    =   | Indicates the normal upgrade flow of staging a new version for testing. Check first that the upgrade version is not more than two minor versions ahead. If so, this is against Istio guideance - FAIL. Else - SUCCESS | 
 
 After performing the above checks, then the standard revision deployment action is to:  
-* Deploy **Base** and **CNI** at the base_version
-* Deploy --revisioned **Istiod** amd **ingressgateway** at the staged_version^†
-* Deploy --revisioned **Istiod** amd **ingressgateway** at the release_version
+* Deploy **Base**, **CNI**, and **IngressGateways** at the base_version
+* Deploy --revisioned **Istiod** at the staged_version^†
+* Deploy --revisioned **Istiod** at the release_version
 * Set the RevisionTag on the stage revision deployment to "staged"
 * Set the RevisionTag on the release revision deployment to "release"
 
@@ -141,12 +143,13 @@ The revisino deployment script first analyzes the versions provided to confirm t
 
 Assuming none of the above checks results is a failure the the following deployment can occur, the same events, regardless of versions specified that meet the requirements, and it is idempotent. Each of the steps modified, as needed, the contents of the ARgo app-of-apps role configuration in psk-aws-control-plane-configuration.  
 
-1. Generate istio_base and istio_cni Application defintions at the base_version value
+-1. Generate istio_base and istio_cni Application defintions at the base_version value
 
 role/
 │
 ├── istio-base
 ├── istio-cni
+├── istio-ingressgateway
 
 Set default revision to base version.  
 
@@ -159,14 +162,12 @@ role/
 role/
 │
 ├── istio-staged
-├── istio-gateway-staged
 
 3. Generate istio_discovery and istio_gateway, --revision=RELEASE_VERSION_STRING^ at the release_version value in the associated Argo Application definition
 
 role/
 │
 ├── istio-release
-├── istio-gateway-release
 
 4. Set --revisionTags=`staged` on --revision=STAGED_VERSION_STRING
 
@@ -195,7 +196,6 @@ role/
 1. Deploy testing application to default-mtls-staged perform health check
 
 1. Deploy testing application to default-mtls perform health check
-
 
 
 ## Additional Maintenance

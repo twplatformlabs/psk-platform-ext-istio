@@ -8,10 +8,9 @@ base_revision=$(echo "${istio_base_version}" | tr '.' '-')
 echo "base_revision $base_revision"
 argocd_namespace=$(jq -er .argocd_namespace environments/$cluster_role.json)
 
-mkdir -p deploy-files
-mkdir -p deploy-files/istio-dependencies
 mkdir -p deploy-files/istio-base
 mkdir -p deploy-files/istio-cni
+mkdir -p deploy-files/istio-ingressgateway
 mkdir -p deploy-files/istio-revision-default
 
 # helm repo add istio https://istio-release.storage.googleapis.com/charts
@@ -32,7 +31,13 @@ mkdir -p deploy-files/istio-revision-default
 # helm template istio-cni istio/cni \
 #      --namespace istio-system \
 #      --version 1.29.3 \
-#      --values deploy-templates/istio-cni-default-values.yaml > base-cni.yaml
+#      --values deploy-templates/istio-cni-default-values.yaml
+
+# helm template istio-cni istio/gateway \
+#      --namespace istio-ingress \
+#      --version 1.29.3 \
+#      --set revision=1-29-3 \
+#      --values deploy-templates/istio-gateway-default-values.yaml 
 
 echo "generating base application.yaml"
 cat <<EOF > deploy-files/istio-base/application.yaml
@@ -129,6 +134,50 @@ spec:
 EOF
 cat deploy-files/istio-cni/application.yaml
 
+echo "generating ingressgateway application.yaml"
+cat <<EOF > deploy-files/istio-ingressgateway/application.yaml
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-ingressgateway
+  namespace: $argocd_namespace
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: psk-aws-control-plane-configuration
+
+  sources:
+    - repoURL: https://istio-release.storage.googleapis.com/charts
+      chart: gateway
+      targetRevision: $istio_base_version
+      helm:
+        valueFiles:
+          - \$config/roles/$cluster_role/istio-ingressgateway/istio-ingressgateway-default-values.yaml
+          - \$config/roles/$cluster_role/istio-ingressgateway/istio-ingressgateway-$cluster_role-values.yaml
+    - repoURL: https://github.com/twplatformlabs/psk-aws-control-plane-configuration
+      targetRevision: HEAD
+      ref: config
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+EOF
+cat deploy-files/istio-ingressgateway/application.yaml
+
 echo "generating revision setting for default Tag, equal to the base version.yaml"
 cat <<EOF > deploy-files/istio-revision-default/application.yaml
 ---
@@ -178,3 +227,5 @@ cp -v deploy-templates/istio-base-default-values.yaml deploy-files/istio-base/is
 cp -v deploy-templates/istio-base-$cluster_role-values.yaml deploy-files/istio-base/istio-base-$cluster_role-values.yaml
 cp -v deploy-templates/istio-cni-default-values.yaml deploy-files/istio-cni/istio-cni-default-values.yaml
 cp -v deploy-templates/istio-cni-$cluster_role-values.yaml deploy-files/istio-cni/istio-cni-$cluster_role-values.yaml
+cp -v deploy-templates/istio-ingressgateway-default-values.yaml deploy-files/istio-ingressgateway/istio-ingressgateway-default-values.yaml
+cp -v deploy-templates/istio-ingressgateway-$cluster_role-values.yaml deploy-files/istio-ingressgateway/istio-ingressgateway-$cluster_role-values.yaml
