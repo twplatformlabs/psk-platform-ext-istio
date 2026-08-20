@@ -1,6 +1,0 @@
-{
-  "custom_chart_version": "2.3.1.0021",
-  "istio_chart_version": "2.3.1",
-  "argocd_namespace": "psk-system",
-  "aws_region": "us-east-2"
-}

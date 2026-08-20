@@ -4,14 +4,10 @@ set -euo pipefail
 cluster_role=$1
 
 custom_chart_version=$(jq -er .custom_chart_version environments/$cluster_role.json)
-istio_release_version=$(jq -er .istio_release_version environments/$cluster_role.json)
-istio_canary_version=$(jq -er .istio_canary_version environments/$cluster_role.json)
 argocd_namespace=$(jq -er .argocd_namespace environments/$cluster_role.json)
 
 echo "Dependency deployment for istio service mesh"
 echo "role: $cluster_role"
-echo "release version: $istio_release_version"
-echo "canary version: $istio_canary_version"
 
 echo "creating deploy-files directory for istio-dependencies files that will written to psk-platform-control-plane-configuration repository"
 mkdir -p deploy-files
@@ -36,7 +32,7 @@ spec:
   sources:
     - repoURL: https://github.com/twplatformlabs/psk-platform-ext-istio
       path: charts/istio-dependencies
-      targetRevision: $custom_chart_version
+      targetRevision: HEAD
       helm:
         valueFiles:
           - \$config/roles/$cluster_role/istio-dependencies/deps-default-values.yaml
