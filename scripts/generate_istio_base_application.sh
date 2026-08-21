@@ -73,6 +73,12 @@ spec:
         duration: 30s
         factor: 2
         maxDuration: 5m
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: istiod-default-validator
+      managedFieldsManagers:
+        - pilot-discovery
 EOF
 cat deploy-files/istio-base/application.yaml
 
