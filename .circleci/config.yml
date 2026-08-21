@@ -51,7 +51,7 @@ jobs:
       - op/env
       - do/bash-functions
       - run:
-          name: generate resources for istio dependencies (syncWave 2)
+          name: generate Application resource for istio namespaces/dependencies (syncWave 2)
           command: bash scripts/generate_istio_dependencies_application.sh << parameters.cluster-role >>
       - kube/write-to-github:
           source: deploy-files/istio-dependencies/*
@@ -61,7 +61,7 @@ jobs:
           name: validate revision release request against current configuration
           command: bash scripts/validate_revision_settings.sh << parameters.cluster-role >>
       - run:
-          name: generate resources for istio base (syncWave 3)
+          name: generate Application resources for istio base (syncWave 3)
           command: bash scripts/generate_istio_base_application.sh << parameters.cluster-role >>
       - kube/write-to-github:
           source: deploy-files/istio-base/*
@@ -71,14 +71,38 @@ jobs:
           source: deploy-files/istio-cni/*
           destination: "roles/<<parameters.cluster-role>>/istio-cni"
           repository-url: *config-repo
-      - kube/write-to-github:
-          source: deploy-files/istio-ingressgateway/*
-          destination: "roles/<<parameters.cluster-role>>/istio-ingressgateway"
-          repository-url: *config-repo
-      - kube/write-to-github:
-          source: deploy-files/istio-revision-default/*
-          destination: "roles/<<parameters.cluster-role>>/istio-revision-default"
-          repository-url: *config-repo
+
+      # - run:
+      #     name: generate Application resources for istiod (syncWave 4)
+      #     command: bash scripts/generate_istiod_application.sh << parameters.cluster-role >>
+      # - kube/write-to-github:
+      #     source: deploy-files/istiod-staged/*
+      #     destination: "roles/<<parameters.cluster-role>>/istiod-staged"
+      #     repository-url: *config-repo
+      # - kube/write-to-github:
+      #     source: deploy-files/istiod-release/*
+      #     destination: "roles/<<parameters.cluster-role>>/istiod-release"
+      #     repository-url: *config-repo
+
+      # - run:
+      #     name: generate Application resources for istio-ingressgateway (syncWave 5)
+      #     command: bash scripts/generate_istiod_application.sh << parameters.cluster-role >>
+      # - kube/write-to-github:
+      #     source: deploy-files/istio-ingressgateway/*
+      #     destination: "roles/<<parameters.cluster-role>>/istio-ingressgateway"
+      #     repository-url: *config-repo
+
+      # - run:
+      #     name: generate Application resources for revision tags (syncWave 6)
+      #     command: bash scripts/generate_revision_tags.sh << parameters.cluster-role >>
+      # - kube/write-to-github:
+      #     source: deploy-files/istio-revision-release/*
+      #     destination: "roles/<<parameters.cluster-role>>/istio-revision-release"
+      #     repository-url: *config-repo
+      # - kube/write-to-github:
+      #     source: deploy-files/istio-revision-staged/*
+      #     destination: "roles/<<parameters.cluster-role>>/istio-revision-staged"
+      #     repository-url: *config-repo
 
   functional-tests:
     docker:
