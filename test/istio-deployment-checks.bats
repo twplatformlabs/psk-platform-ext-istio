@@ -24,7 +24,7 @@
 }
 
 # ------------------------------------- istio base components
-@test "cni daemonset running" {
+@test "istio CRDs deployed" {
   run bash -c "kubectl get crd | grep istio"
   [[ "${output}" =~ "authorizationpolicies.security.istio.io" ]]
   [[ "${output}" =~ "destinationrules.networking.istio.io" ]]

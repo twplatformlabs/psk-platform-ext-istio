@@ -46,8 +46,8 @@ spec:
           - name: revision
             value: $release_revision
         valueFiles:
-          - \$config/roles/$cluster_role/istiod/istiod-default-values.yaml
-          - \$config/roles/$cluster_role/istiod/istiod-$cluster_role-values.yaml
+          - \$config/roles/$cluster_role/istiod-release/istiod-default-values.yaml
+          - \$config/roles/$cluster_role/istiod-release/istiod-$cluster_role-values.yaml
     - repoURL: https://github.com/twplatformlabs/psk-aws-control-plane-configuration
       targetRevision: HEAD
       ref: config
@@ -97,8 +97,8 @@ spec:
           - name: revision
             value: $staged_revision
         valueFiles:
-          - \$config/roles/$cluster_role/istiod/istiod-default-values.yaml
-          - \$config/roles/$cluster_role/istiod/istiod-$cluster_role-values.yaml
+          - \$config/roles/$cluster_role/istiod-staged/istiod-default-values.yaml
+          - \$config/roles/$cluster_role/istiod-staged/istiod-$cluster_role-values.yaml
     - repoURL: https://github.com/twplatformlabs/psk-aws-control-plane-configuration
       targetRevision: HEAD
       ref: config
