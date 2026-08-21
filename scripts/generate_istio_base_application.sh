@@ -10,7 +10,7 @@ echo "Generate Istio base and cni Application definition at base version: $istio
 
 mkdir -p deploy-files/istio-base
 mkdir -p deploy-files/istio-cni
-mkdir -p deploy-files/istio-revision-base
+mkdir -p deploy-files/istiod-revision-base
 
 # to generate a similar template for analysis
 # helm template istio-base istio/base \
