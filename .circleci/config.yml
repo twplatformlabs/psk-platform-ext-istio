@@ -86,7 +86,7 @@ jobs:
 
       - run:
           name: generate Application resources for istio-ingressgateway (syncWave 5)
-          command: bash scripts/generate_istiod_application.sh << parameters.cluster-role >>
+          command: bash scripts/generate_istio_ingressgateway_application.sh << parameters.cluster-role >>
       - kube/write-to-github:
           source: deploy-files/istio-ingressgateway/*
           destination: "roles/<<parameters.cluster-role>>/istio-ingressgateway"
