@@ -44,8 +44,8 @@ configuration_repo_url="https://github.com/twplatformlabs/psk-aws-control-plane-
 role_search_url="$configuration_repo_url/$cluster_role"
 
 installed_base=$(get_app_target_revision sandbox istio-base)
-installed_release=$(get_app_target_revision sandbox istio-release)
-installed_staged=$(get_app_target_revision sandbox istio-staged)
+installed_release=$(get_app_target_revision sandbox istiod-release)
+installed_staged=$(get_app_target_revision sandbox istiod-staged)
 
 # Used when debugging script logic testing
 # installed_base=1.29.3
