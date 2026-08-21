@@ -29,7 +29,6 @@ get_app_target_revision() {
     fi
   }
 
-
 cluster_role=$1
 istio_base_version=$(jq -er .istio_base_version environments/$cluster_role.json)
 istio_release_version=$(jq -er .istio_release_version environments/$cluster_role.json)
