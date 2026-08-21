@@ -1,7 +1,0 @@
-apiVersion: v2
-name: istio-revision-default
-description: |-
-  Set base deployment version to default revision
-type: application
-version: 0.1.0
-

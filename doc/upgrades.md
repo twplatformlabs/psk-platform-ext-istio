@@ -120,91 +120,76 @@ The revisino deployment script first analyzes the versions provided to confirm t
 
     Base must be equal to either stage or release.
 
-
 3. If base = release && base ≠ stage - FAIL
 
-    if installed_release = release_version, this indicates a rollback, but rollback must be performed by setting all 3 values the same.
+  a. if installed_release = release_version, this indicates a rollback, but rollback must be performed by setting all 3 values the same.  
     
-    If installed_release ≠ release_version, this indicates an attempt to install and release a version all at once - must first stage a version of istio before releasing - even in greenfield setting.
+  b. If installed_release ≠ release_version, this indicates an attempt to install and release a version all at once - must first stage a version of istio before releasing - even in greenfield setting.  
 
 4. if base = release && stage - indicates either successful upgrade completiong or full rollback.
 
-    If release_version = install_release && release_version ≠ installed_base && installed_stage - this is a full rollback - SUCCESS.
+  a. If release_version = install_release && release_version ≠ installed_base && installed_stage - this is a full rollback - SUCCESS.  
     
-    If release_version ≠ installed_release && stage_version = installed_base && base_version && installed_staged, this indicates a completed upgrade - SUCCESS.
+  b. If release_version ≠ installed_release && stage_version = installed_base && base_version && installed_staged, this indicates a completed upgrade - SUCCESS.  
     
-    Else, an error, probably an attempt to deploy and set release version at same time. Indicate staging is required - FAIL.
+  c. Else, an error, probably an attempt to deploy and set release version at same time. Indicate staging is required - FAIL.  
 
-5. if base ≠ release && base = staged - indicates the normal first step in canary release.
-    
-    SUCCESS.
+5. if base ≠ release && base = staged - indicates the normal first step in canary release - SUCCESS.
 
-### On SUCCESS evaluation of desired versions
+### If SUCCESS in evaluation of desired versions
 
-Assuming none of the above checks results is a failure the the following deployment can occur, the same events, regardless of versions specified that meet the requirements, and it is idempotent. Each of the steps modified, as needed, the contents of the ARgo app-of-apps role configuration in psk-aws-control-plane-configuration.  
+Assuming none of the above checks results is a failure the the following deployment can occur, the same events, regardless of versions specified that meet the requirements, and it is idempotent. Each of the steps modified, as needed, the contents of the Argo app-of-apps role configuration in psk-aws-control-plane-configuration.  
 
--1. Generate istio_base and istio_cni Application defintions at the base_version value
-
+1. Generate istio_base and istio_cni Application defintions at the istio_base_version value
+```
 role/
 │
-├── istio-base
+├── istio-base     # the base install also sets defaultRevision to BASE_REVISION_STRING^
 ├── istio-cni
-├── istio-ingressgateway
-
-Set default revision to base version.  
-
-role/
-│
-├── istio-default-revision
-
-2. Generate istio_discovery and istio_gateway, --revision=STAGED_VERSION_STRING^ at the staged_version value in the associated Argo Application definition
-
+```
+2. Generate istio_discovery and istio_gateway Application definitions, istio_staged_version first, then istio_release_version
+```
 role/
 │
 ├── istio-staged
-
-3. Generate istio_discovery and istio_gateway, --revision=RELEASE_VERSION_STRING^ at the release_version value in the associated Argo Application definition
-
+├── istio-release
+```
+2. Generate an ingressgateway Application definition at istio_base_revision
+```
 role/
 │
-├── istio-release
+├── istio-ingressgateway
+```
+3. Generate revision tags using local revision charts
 
-4. Set --revisionTags=`staged` on --revision=STAGED_VERSION_STRING
-
-Set default revision to base version.  
-
+Set --revisionTags=`staged` on --revision=STAGED_VERSION_STRING
+Set --revisionTags=`release` on --revision=RELEASE_VERSION_STRING
+```
 role/
 │
 ├── istio-staged-revision
-
-  All namespaces with `istio.io/rav: staged` will now use istio-STAGED_VERSION_STRING
-
-5. Set --revisionTags=`release` on --revision=RELEASE_VERSION_STRING
-
-Set default revision to base version.  
-
-role/
-│
 ├── istio-release-revision
+```
+4. **Testing**
 
-  All namespaces with `istio.io/rav: release` will now use istio-RELEASE_VERSION_STRING
+At this point:
+* all namespaces with the label `istio.io/rev: staged` will use istio-STAGED_VERSION_STRING  
+* all namespaces with the label `istio.io/rev: release` will use istio-RELEASE_VERSION_STRING  
 
-^VERSION_STRINGS mean subtitute "_" for "." as in 1.29.3 = 1-29-3 in revision name
+Deploy testing application to default-mtls-staged perform health check
 
-### Integration test
+Deploy testing application to default-mtls perform health check
 
-1. Deploy testing application to default-mtls-staged perform health check
-
-1. Deploy testing application to default-mtls perform health check
-
+^VERSION_STRINGS mean subtitute "_" for "." as in 1.29.3 = 1-29-3 in revision name  
 
 ## Additional Maintenance
 
 The "Revision" template in the istio-revision-* charts folders, is created via a specific template resource in the isito-discovery chart:  
 
-E.g.,   
-
+example:  
+```
 helm template istiod istio/istiod -s templates/revision-tags-mwc.yaml --version (the same version in the revision) --set revisionTags="{default}" --set revision=$base_revision -n istio-system 
+```
 
 This is a "slow to change" resource within istiod, but still, the practical issue is that the structure of the "template" that used to create the helm deploy to "set" a revision to a version is fixed to the structure of the version of istiod that was used to create this template. So we can't indefinitely ignore doing some recurring checks against the template contents we have and the template resulting from a "current version" of istiod.
 
