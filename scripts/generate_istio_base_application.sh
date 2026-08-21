@@ -201,6 +201,8 @@ spec:
         parameters:
           - name: revision
             value: $base_revision
+          - name: version
+            value: $istio_base_version
     - repoURL: https://github.com/twplatformlabs/psk-aws-control-plane-configuration
       targetRevision: HEAD
       ref: config

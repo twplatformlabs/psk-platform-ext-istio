@@ -10,7 +10,7 @@ metadata:
   name: istio-revision-tag-release
   labels:
     istio.io/tag: release
-    istio.io/rev: {{ .Release.revision }}
+    istio.io/rev: {{ .Values.revision }}
     install.operator.istio.io/owning-resource: unknown
     operator.istio.io/component: "Pilot"
     app: sidecar-injector
@@ -19,13 +19,13 @@ metadata:
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/instance: "istiod"
     app.kubernetes.io/part-of: "istio"
-    app.kubernetes.io/version: "{{ .Release.version }}"
-    helm.sh/chart: istiod-{{ .Release.version }}
+    app.kubernetes.io/version: "{{ .Values.version }}"
+    helm.sh/chart: istiod-{{ .Values.version }}
 webhooks:
 - name: rev.namespace.sidecar-injector.istio.io
   clientConfig:
     service:
-      name: istiod-{{ .Release.revision }}
+      name: istiod-{{ .Values.revision }}
       namespace: istio-system
       path: "/inject"
       port: 443
@@ -55,7 +55,7 @@ webhooks:
 - name: rev.object.sidecar-injector.istio.io
   clientConfig:
     service:
-      name: istiod-{{ .Release.revision }}
+      name: istiod-{{ .Values.revision }}
       namespace: istio-system
       path: "/inject"
       port: 443
