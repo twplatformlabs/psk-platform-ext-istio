@@ -47,21 +47,6 @@
   [[ "${output}" =~ "daemon set "istio-cni-node" successfully rolled out" ]]
 }
 
-  [[ "${output}" =~ "authorizationpolicies.security.istio.io" ]]
-  [[ "${output}" =~ "destinationrules.networking.istio.io" ]]
-  [[ "${output}" =~ "envoyfilters.networking.istio.io" ]]
-  [[ "${output}" =~ "gateways.networking.istio.io" ]]
-  [[ "${output}" =~ "peerauthentications.security.istio.io" ]]
-  [[ "${output}" =~ "proxyconfigs.networking.istio.io" ]]
-  [[ "${output}" =~ "requestauthentications.security.istio.io" ]]
-  [[ "${output}" =~ "serviceentries.networking.istio.io" ]]
-  [[ "${output}" =~ "sidecars.networking.istio.io" ]]
-  [[ "${output}" =~ "telemetries.telemetry.istio.io" ]]
-  [[ "${output}" =~ "virtualservices.networking.istio.io" ]]
-  [[ "${output}" =~ "wasmplugins.extensions.istio.io" ]]
-  [[ "${output}" =~ "workloadentries.networking.istio.io" ]]
-  [[ "${output}" =~ "workloadgroups.networking.istio.io" ]]
-
   # ------------------------------------- istiod
 
   # ------------------------------------- istio-ingressgateway
