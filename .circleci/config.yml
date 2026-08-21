@@ -84,13 +84,13 @@ jobs:
           destination: "roles/<<parameters.cluster-role>>/istiod-release"
           repository-url: *config-repo
 
-      # - run:
-      #     name: generate Application resources for istio-ingressgateway (syncWave 5)
-      #     command: bash scripts/generate_istiod_application.sh << parameters.cluster-role >>
-      # - kube/write-to-github:
-      #     source: deploy-files/istio-ingressgateway/*
-      #     destination: "roles/<<parameters.cluster-role>>/istio-ingressgateway"
-      #     repository-url: *config-repo
+      - run:
+          name: generate Application resources for istio-ingressgateway (syncWave 5)
+          command: bash scripts/generate_istiod_application.sh << parameters.cluster-role >>
+      - kube/write-to-github:
+          source: deploy-files/istio-ingressgateway/*
+          destination: "roles/<<parameters.cluster-role>>/istio-ingressgateway"
+          repository-url: *config-repo
 
       # - run:
       #     name: generate Application resources for revision tags (syncWave 6)
