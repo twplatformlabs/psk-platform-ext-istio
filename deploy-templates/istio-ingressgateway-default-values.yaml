@@ -2,6 +2,7 @@ name: istio-ingressgateway
 replicaCount: 1
 
 kind: Deployment
+revision: "base"
 
 rbac:
   # If enabled, roles will be created to enable accessing certificates from Gateways. This is not needed

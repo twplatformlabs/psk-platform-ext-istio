@@ -1,0 +1,7 @@
+apiVersion: v2
+name: istio-revision-staged
+description: |-
+  Setup staged Revision staged istio version
+type: application
+version: 0.1.0
+
