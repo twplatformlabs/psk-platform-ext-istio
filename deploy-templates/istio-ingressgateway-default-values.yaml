@@ -138,19 +138,19 @@ affinity: {}
 networkGateway: ""
 
 # Ports for the network gateway service. Only used when networkGateway is set.
-networkGatewayPorts:
-  status-port:
-    port: 15021
-    targetPort: 15021
-  tls:
-    port: 15443
-    targetPort: 15443
-  tls-istiod:
-    port: 15012
-    targetPort: 15012
-  tls-webhook:
-    port: 15017
-    targetPort: 15017
+# networkGatewayPorts:
+#   status-port:
+#     port: 15021
+#     targetPort: 15021
+#   tls:
+#     port: 15443
+#     targetPort: 15443
+#   tls-istiod:
+#     port: 15012
+#     targetPort: 15012
+#   tls-webhook:
+#     port: 15017
+#     targetPort: 15017
 
 imagePullPolicy: "Always"
 
@@ -159,11 +159,11 @@ podDisruptionBudget:
 
 # Configure the DNS policy for the gateway pods. See
 # https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
-dnsPolicy: ""
+# dnsPolicy: ""
 
 # Configure DNS settings for the gateway pods. See
 # https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
-dnsConfig: {}
+# dnsConfig: {}
 
 # Sets the per-pod terminationGracePeriodSeconds setting.
 terminationGracePeriodSeconds: 30
