@@ -233,7 +233,7 @@ global:
   istiod:
     enableAnalysis: false
 
-  logAsJson: json
+  logAsJson: true
 
   logging:
     level: "default:info"
