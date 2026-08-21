@@ -8,3 +8,4 @@ temp.yaml
 del-resource.sh
 bash-functions.sh
 base*
+.claude
