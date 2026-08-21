@@ -74,7 +74,7 @@ jobs:
           destination: "roles/<<parameters.cluster-role>>/istio-cni"
           repository-url: *config-repo
       - kube/write-to-github:
-          source: deploy-files/istio-revision-base/*
+          source: deploy-files/istiod-revision-base/*
           destination: "roles/<<parameters.cluster-role>>/istio-revision-base"
           repository-url: *config-repo
 
