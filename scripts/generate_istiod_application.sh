@@ -66,6 +66,12 @@ spec:
         duration: 30s
         factor: 2
         maxDuration: 5m
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: istio-validator-$release_revision-istio-system
+      managedFieldsManagers:
+        - pilot-discovery
 EOF
 else
   echo "Skipping release version on initial install"
@@ -117,6 +123,12 @@ spec:
         duration: 30s
         factor: 2
         maxDuration: 5m
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: istio-validator-$staged_revision-istio-system
+      managedFieldsManagers:
+        - pilot-discovery
 EOF
 cat deploy-files/istiod-staged/application.yaml
 
