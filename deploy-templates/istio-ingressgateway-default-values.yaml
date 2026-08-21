@@ -31,12 +31,12 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 65532
   runAsGroup: 65532
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
   seccompProfile:
     type: RuntimeDefault
 
-containerSecurityContext: {}
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
 
 service:
   # Type of service. Set to "None" to disable the service entirely
