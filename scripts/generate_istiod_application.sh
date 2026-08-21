@@ -89,7 +89,7 @@ spec:
   project: psk-aws-control-plane-configuration
 
   sources:
-    - repoURL: https://istio-staged.storage.googleapis.com/charts
+    - repoURL: https://istio-release.storage.googleapis.com/charts
       chart: istiod
       targetRevision: $istio_staged_version
       helm:
