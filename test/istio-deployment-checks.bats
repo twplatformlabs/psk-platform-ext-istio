@@ -44,7 +44,7 @@
 
 @test "cni daemonset running" {
   run bash -c "kubectl -n istio-system rollout status daemonset/istio-cni-node"
-  [[ "${output}" =~ "daemon set "istio-cni-node" successfully rolled out" ]]
+  [[ "${output}" =~ "successfully rolled out" ]]
 }
 
   # ------------------------------------- istiod
