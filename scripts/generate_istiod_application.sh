@@ -28,7 +28,7 @@ if [[ $istio_release_version != "none" ]]; then
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istio-release
+  name: istiod-release
   namespace: $argocd_namespace
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -85,7 +85,7 @@ cat <<EOF > deploy-files/istiod-staged/application.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istio-staged
+  name: istiod-staged
   namespace: $argocd_namespace
   finalizers:
     - resources-finalizer.argocd.argoproj.io
